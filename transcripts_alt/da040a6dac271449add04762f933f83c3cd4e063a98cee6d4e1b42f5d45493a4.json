@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-12",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-12",
+      "owner": "logi.leo",
+      "deadline": "2026-07-24",
+      "category": "FREIGHT",
+      "amount": 1050.0,
+      "notes": "Corrected figures (final)."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "FRT-100"
+    ],
+    "icd10_codes": [
+      "GL-5010"
+    ],
+    "normalized_amount": 1050.0,
+    "category": "FREIGHT",
+    "claim_summary": "FREIGHT encounter ALT-12 for logi.leo; charge 1050.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:da040a6dac271449add04762f933f83c3cd4e063a98cee6d4e1b42f5d45493a4",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:1c7fa8d29a3dc114d216592c5e412799d4694f0e82c49dece7aca649f33eb1fe"
+}

@@ -92,10 +92,17 @@ delivery) are localized changes thanks to the typed-contract + event-bus design.
 3. **Assembly** (`agents/worker.py`) — the CodingWorker drafts a structured claim
    (CPT/ICD codes + summary + confidence + abstain). Structured output is enforced
    with bounded repair → abstain. Input hash, model and prompt version are recorded.
-4. **Review** (`agents/verifier.py` + `agents/operator.py` + `state_machine.py`) —
-   the Verifier independently grounds the draft and can OVERRULE the Worker; the
-   Operator drives the approval **state machine**
-   (`draft→in_review→approved→delivered`, `→blocked` on refusal).
+4. **Review** (`agents/verifier.py` + `agents/operator.py` + `state_machine.py`
+   + `fleet/review.py`) — the Verifier independently grounds the draft and can OVERRULE
+   the Worker; the Operator drives the approval **state machine**
+   (`draft→in_review→approved→delivered`, `→blocked` on refusal). A human-in-the-loop
+   surface (`make review …` → `fleet/review.py`) provides the four required actions
+   **approve / reject / request-changes / edit-resolve**, each appended to an
+   append-only, hash-chained review journal with actor + timestamp + **before/after**,
+   and enforces **maker ≠ checker** (an actor who edited a record may not approve it).
+   `edit-resolve` lets a human supply a corrected value for a Class-A exception;
+   re-assembly is then **deterministic** (no LLM — the human replaced the judgement) and
+   re-grounded by the Verifier before it may proceed.
 5. **Delivery** (`fleet/pipeline.py`) — a branded **837 claim batch**
    (`out/rcm_claim_batch.json`) + append-only **hash-chained** `out/audit.json`;
    CASE_ID present throughout.
@@ -112,11 +119,16 @@ and `category` to the source, and checks every CPT/ICD code against the fixed
 - empty code set → `AGENT_MALFORMED`
 - abstain / low confidence → `needs_human` → `LOW_CONFIDENCE`
 
-The Orchestrator then **escalates** (Router picks the strong model) and retries up
-to `MAX_RETRIES=2`. If still bad, it routes to a human exception. The disagreement
-is logged in the record's `agent_trace` (see `make trace ID=REC-020` — a Worker
-hallucinates the amount, the Verifier overrules it, and the strong-model retry
-recovers).
+The retry is **genuine collaboration, not a blind model bump**: the Orchestrator hands
+the Verifier's `disagreements` back to the Worker as structured `prior_feedback`
+(`build_worker_request(..., prior_feedback)`), which is injected into the Worker's next
+prompt ("your previous attempt was rejected: `normalized_amount` 15249 not grounded,
+source 5250 — fix it"). It also **escalates** the model (Router picks the strong tier)
+and retries up to `MAX_RETRIES=2`; if still bad, routes to a human exception. The
+feedback is auditable: a `feedback_to_worker` event carries the exact payload, the retry
+worker span reads `applied verifier feedback`, and the retry transcript's request
+contains `prior_feedback`. See `make trace ID=REC-020` — Worker hallucinates the amount,
+Verifier overrules, feedback is applied, strong-model retry recovers, delivered.
 
 ## 5. Where budget / router decisions live
 
@@ -154,3 +166,14 @@ transcript is tagged with the calling `agent`, so the gate proves the load-beari
 call was a Worker. In `REPLAY_LLM=false` it calls an OpenAI-compatible endpoint and
 records a transcript in the same shape. Deterministic steps (intake, normalize,
 rules, router, verifier, state machine, audit) are **never** stubbed.
+
+## 9. Domain plug-in (generalization is structural, not worded)
+
+All vertical-specific knowledge — the coding codebook and the valid category set —
+lives in `domain_config.json` (loaded by `fleet/domain.py`); field renames live in
+`field_map.json`. The pipeline, agents, rules and audit contain **no** RCM literals.
+`make demo-alt` selects `DOMAIN_CONFIG=domain_config.alt.json` + `SEED_DIR=seed_alt`
+(freight-invoice auditing: non-RCM categories, `FRT-*`/`GL-*` codes, a renamed
+`invoice_total` field) and runs the **identical fleet** to a passing gate with every
+reason code. The same generalization surface makes the live extension safe: a new
+domain, a new detector, or a 4th agent is a localized change, not a rewrite.

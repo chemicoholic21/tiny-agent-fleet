@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-11",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-11",
+      "owner": "logi.kim",
+      "deadline": "2026-07-23",
+      "category": "LASTMILE",
+      "amount": 1100.0,
+      "notes": "Final-mile via partner EDI."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "LMD-500"
+    ],
+    "icd10_codes": [
+      "GL-5400"
+    ],
+    "normalized_amount": 1100.0,
+    "category": "LASTMILE",
+    "claim_summary": "LASTMILE encounter ALT-11 for logi.kim; charge 1100.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:41c2762128f550c411a5a935520f7e6307d1a8df30a87b62585a29b0506d753f",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:01ed1b1c9c2d4d260be9e888136f193ca91c98d1e57cdf30cc81d65c72c8759e"
+}

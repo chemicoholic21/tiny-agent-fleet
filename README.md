@@ -75,9 +75,12 @@ REPLAY_LLM=false LLM_API_KEY=sk-... LLM_MODEL=gpt-4o-mini make demo   # or pytho
 |---|---|
 | `make demo` | full fleet on `$SEED_DIR`, writes package + audit + exception queue |
 | `make verify` | `verify_audit.py` PASS on `out/audit.json` |
-| `make trace ID=REC-020` | full agent decision path (Verifier overrules Worker + recovery) |
+| `make trace ID=REC-020` | full agent decision path (Verifier overrules Worker, feedback, recovery) |
 | `make replay ID=REC-016` | data lineage from the log alone |
+| `make verify-replay` | delivered outputs reproduced **byte-for-byte from transcripts alone** |
 | `make eval` | 17 golden cases + LLM-judge per agent, per-agent scores |
+| `make review ARGS="REC-012 edit-resolve dr.reyes amount 5200"` | Operator surface: approve/reject/request-changes/edit-resolve (maker≠checker, before/after audit) |
+| `make demo-alt` | **same fleet on a different vertical** (freight invoicing) — generalization proof |
 | `make probe-approval` | non-approved / amendment-missing item refused + logged |
 | `make probe-agent-failure` | Verifier catches AGENT_HALLUCINATION, routes, not delivered |
 | `make probe-budget` | BUDGET_EXCEEDED raised + handled, never silent overspend |
@@ -105,7 +108,14 @@ recovers on REC-020; persistent case in `probe-agent-failure`), `AGENT_MALFORMED
 No IDs/values are hardcoded. Detectors are rule-based: outlier = per-batch median+MAD;
 stale = `deadline < PIPELINE_NOW`; injection = pattern set; abstain = Worker confidence
 floor; schema drift = declarative `field_map.json`; the `UNVERIFIED_ANOMALY` catch-all
-absorbs unknown anomalies. Field renames map by alias, not by name. The held-out seed
+absorbs unknown anomalies. Field renames map by alias, not by name.
+
+**Proof it's structural, not RCM-worded:** all domain-specific knowledge (the coding
+codebook + valid category set) lives in `domain_config.json`. `make demo-alt` runs the
+**identical fleet** on a completely different vertical — *freight-invoice auditing*
+(`domain_config.alt.json` + `seed_alt/`, renamed `invoice_total` field, non-RCM
+categories/codes) — and passes the same gate with all reason codes. Swapping the config
++ seed is the only change; no pipeline code moves. The held-out seed
 (different values, renamed fields, unseen anomaly, injected agent failures) exercises
 the same code paths; the real-LLM path proves the Worker is load-bearing and the
 Verifier catches agent misbehaviour on unseen data.
@@ -144,4 +154,20 @@ audit are all real code, not prompts.
 - **Next:** append-only event store + sharded queue consumers for 10k/day; richer
   clearinghouse (837/277CA/835) adapters; a Redactor agent for PII before delivery;
   two-pass Verifier for high-value claims. The typed-contract + event-bus design makes
-  each a localized change (proven by the live-extension readiness).
+  each a localized change (proven by the live-extension readiness below).
+
+### Live-extension readiness (where each likely ask plugs in)
+- **Add a 4th agent (e.g. Redactor):** new `fleet/agents/redactor.py` with an `AgentSpec`
+  (`role: other`, `can_call: []`); Orchestrator adds it to `can_call` and calls it in
+  `_deliver()` before `build_delivered_fields`; it emits its own `agent_trace` span. No
+  other file changes.
+- **New reason code + detector:** add a `detect_*` to `fleet/rules.py` and one enum entry;
+  it routes through the existing exception path automatically.
+- **Change the router policy / move the cost number:** edit `fleet/agents/router.py`
+  signals; `make demo` reprints avg/$record and 10k projection.
+- **Two independent Verifier passes for high-value records:** the Verifier is already an
+  isolated unit invoked by the Orchestrator — wrap the call in `process()` in a 2-of-2
+  consensus for `amount >= T`.
+- **Iterative Worker↔Verifier collaboration** is already implemented: on a rejection the
+  Verifier's disagreements are fed back into the Worker's next prompt (see
+  `feedback_to_worker` events and `make trace ID=REC-020`).

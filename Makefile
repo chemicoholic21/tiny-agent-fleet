@@ -26,6 +26,15 @@ eval:
 replay:
 	SEED_DIR=$(SEED_DIR) $(PY) -m fleet.cli replay $(ID)
 
+# Human-in-the-loop Operator surface: approve/reject/request-changes/edit-resolve.
+# e.g. make review ARGS="REC-012 edit-resolve dr.reyes amount 5200"
+review:
+	SEED_DIR=$(SEED_DIR) $(PY) -m fleet.cli review $(ARGS)
+
+# Prove REPLAY reproduces delivered outputs byte-for-byte from transcripts alone.
+verify-replay:
+	SEED_DIR=$(SEED_DIR) $(PY) -m fleet.cli verify-replay
+
 probe-approval:
 	SEED_DIR=$(SEED_DIR) $(PY) -m fleet.cli probe-approval
 
@@ -47,6 +56,17 @@ probe-crash:
 # Regenerate committed replay transcripts from the seed (dev-time recording step).
 transcripts:
 	SEED_DIR=$(SEED_DIR) $(PY) tools/gen_transcripts.py
+
+# GENERALIZATION PROOF: run the SAME fleet on a totally different vertical
+# (freight-invoice auditing) via a swapped domain config + seed. No code changes.
+transcripts-alt:
+	DOMAIN_CONFIG=domain_config.alt.json SEED_DIR=seed_alt TRANSCRIPTS_DIR=transcripts_alt \
+	  GEN_ABSTAIN_IDS=ALT-10 GEN_HALLUCINATE_IDS= $(PY) tools/gen_transcripts.py
+
+demo-alt:
+	DOMAIN_CONFIG=domain_config.alt.json SEED_DIR=seed_alt TRANSCRIPTS_DIR=transcripts_alt \
+	  OUT_DIR=out_alt CASE_ID=$${CASE_ID:-CEDX-DEMO1} $(PY) -m fleet.cli demo
+	$(PY) verify_audit.py --audit out_alt/audit.json --transcripts transcripts_alt --schema audit.schema.json
 
 clean:
 	rm -rf out

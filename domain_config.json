@@ -1,0 +1,12 @@
+{
+  "name": "Healthcare Administration (RCM)",
+  "primary_field_label": "claim charge",
+  "categories": ["ONBOARDING", "RENEWAL", "REVIEW", "REPORT", "INTAKE"],
+  "codebook": {
+    "ONBOARDING": {"cpt": ["99201", "99202", "99203"], "icd10": ["Z00.00", "Z02.9"]},
+    "RENEWAL":    {"cpt": ["99211", "99212", "99213"], "icd10": ["Z76.89", "Z02.9"]},
+    "REVIEW":     {"cpt": ["99213", "99214", "99215"], "icd10": ["Z09", "Z13.9"]},
+    "REPORT":     {"cpt": ["99080", "99358", "99359"], "icd10": ["Z02.9", "Z13.9"]},
+    "INTAKE":     {"cpt": ["99204", "99205", "99385"], "icd10": ["Z00.00", "Z02.9"]}
+  }
+}

@@ -11,6 +11,7 @@ import json
 from pathlib import Path
 
 from .config import Config, PIPELINE_VERSION, INDUSTRY, TIER
+from .domain import domain_name
 from .events import EventBus
 from .audit import AuditLog
 from .intake import intake
@@ -96,7 +97,7 @@ class Fleet:
         package = {
             "package": "CEDX RCM 837 Claim Batch",
             "case_id": self.cfg.case_id,
-            "industry": INDUSTRY,
+            "industry": domain_name(),
             "pipeline_version": PIPELINE_VERSION,
             "claims": [
                 {"id": r.id, "delivered_fields": r.delivered_fields,
@@ -141,7 +142,7 @@ class Fleet:
             "generated_at": f"{self.cfg.pipeline_now}T00:00:00Z",
             "seed_dir": str(self.cfg.seed_dir),
             "pipeline_now": self.cfg.pipeline_now,
-            "industry": INDUSTRY,
+            "industry": domain_name(),
             "tier": TIER,
             "amendment": {"role": self.cfg.amendment.role,
                           "threshold": self.cfg.amendment.threshold,

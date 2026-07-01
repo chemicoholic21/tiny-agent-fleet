@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-02",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-02",
+      "owner": "logi.ben",
+      "deadline": "2026-07-20",
+      "category": "STORAGE",
+      "amount": 950.0,
+      "notes": "Warehouse storage, monthly."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "STG-300"
+    ],
+    "icd10_codes": [
+      "GL-5200"
+    ],
+    "normalized_amount": 950.0,
+    "category": "STORAGE",
+    "claim_summary": "STORAGE encounter ALT-02 for logi.ben; charge 950.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:e560896f28ab2c9abe42246182d6d917d7d821b2ff79bb89962b298286f45b9e",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:7b379e4b2d9ac36cc0beba1accd9c5470bd5a6c5c4d1ca29de3e1471fb78aabd"
+}

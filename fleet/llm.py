@@ -212,4 +212,8 @@ def build_prompt(agent: str, prompt_version: str, request: dict) -> tuple[str, s
         "confidence (0..1), abstain (boolean). Never invent amounts or categories."
     )
     user = json.dumps(request.get("encounter", request), ensure_ascii=False)
+    if request.get("prior_feedback"):
+        user += ("\n\nYour previous attempt was REJECTED by the Verifier. Fix exactly "
+                 "these grounding errors and return corrected JSON:\n"
+                 + json.dumps(request["prior_feedback"], ensure_ascii=False))
     return system, user

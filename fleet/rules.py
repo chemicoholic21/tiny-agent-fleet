@@ -21,6 +21,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from .events import NormalizedRecord
+from .domain import categories as _domain_categories
 
 # Robust outlier threshold: modified z-score using median absolute deviation.
 # |0.6745 * (x - median) / MAD| > 3.5 is the classic Iglewicz-Hoaglin cutoff.
@@ -38,7 +39,7 @@ INJECTION_PATTERNS = [
     r"system\s*:\s*",
 ]
 
-VALID_CATEGORIES = {"ONBOARDING", "RENEWAL", "REVIEW", "REPORT", "INTAKE"}
+# Valid categories come from the active domain config (domain-agnostic).
 
 
 @dataclass
@@ -87,8 +88,8 @@ def detect_unverified_anomaly(rec: NormalizedRecord) -> Optional[RuleFinding]:
             return RuleFinding(
                 "UNVERIFIED_ANOMALY", "A",
                 f"notes assert unverifiable amount {claimed} vs field {rec.amount}")
-    # Category present but outside the known set.
-    if rec.category is not None and rec.category not in VALID_CATEGORIES:
+    # Category present but outside the known set for the active domain.
+    if rec.category is not None and rec.category not in _domain_categories():
         return RuleFinding("UNVERIFIED_ANOMALY", "A",
                            f"unknown category '{rec.category}'")
     return None

@@ -14,9 +14,15 @@ from ..llm import LLMClient, LLMResult
 PROMPT_VERSION = "coder-v3"
 
 
-def build_worker_request(rec: NormalizedRecord, attempt: int, model: str) -> dict:
-    """Deterministic request payload — also the replay key."""
-    return {
+def build_worker_request(rec: NormalizedRecord, attempt: int, model: str,
+                         prior_feedback=None) -> dict:
+    """Deterministic request payload — also the replay key.
+
+    `prior_feedback` carries the Verifier's disagreements from the previous attempt,
+    so a retry is genuine *collaboration* (Worker <- Verifier feedback -> Worker),
+    not a blind model bump. It is part of the request, hence part of the replay key.
+    """
+    req = {
         "agent": "CodingWorker",
         "prompt_version": PROMPT_VERSION,
         "record_id": rec.id,
@@ -31,6 +37,9 @@ def build_worker_request(rec: NormalizedRecord, attempt: int, model: str) -> dic
             "notes": rec.notes,
         },
     }
+    if prior_feedback:
+        req["prior_feedback"] = prior_feedback
+    return req
 
 
 class MalformedDraft(Exception):
@@ -52,12 +61,14 @@ class CodingWorker(Agent):
         super().__init__(bus, audit)
         self.llm = llm
 
-    def draft(self, rec: NormalizedRecord, attempt: int, model: str) -> tuple[WorkerDraft, LLMResult]:
-        request = build_worker_request(rec, attempt, model)
+    def draft(self, rec: NormalizedRecord, attempt: int, model: str,
+              prior_feedback=None) -> tuple[WorkerDraft, LLMResult]:
+        request = build_worker_request(rec, attempt, model, prior_feedback)
         result = self.llm.call(self.spec.name, PROMPT_VERSION, request, model)
         draft = self._parse(rec, result.response)
         self.log("worker_draft", record_id=rec.id, attempt=attempt, model=result.model,
                  abstain=draft.abstain, confidence=draft.confidence,
+                 applied_feedback=bool(prior_feedback),
                  transcript_hash=result.transcript_hash)
         self.bus.publish("worker.drafted", draft)
         return draft, result
