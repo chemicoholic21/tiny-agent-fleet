@@ -15,6 +15,7 @@ same code generalizes to the held-out seed under the real-LLM path.
 """
 from __future__ import annotations
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -27,16 +28,25 @@ from fleet.intake import intake
 from fleet.normalize import normalize
 from fleet.rules import evaluate_data_rules, compute_outlier_bounds
 from fleet.agents.router import Router
+from fleet.agents.verifier import Verifier
 from fleet.agents.worker import build_worker_request, PROMPT_VERSION
 from fleet.codebook import expected_primary
 from fleet.delivered import build_delivered_fields
 from fleet.llm import cost_of
 from fleet.util import sha, hexof
 
-ABSTAIN_IDS = {"REC-015"}
-HALLUCINATE_ONCE_IDS = {"REC-020"}
+def _idset(env, default):
+    raw = os.environ.get(env, default)
+    return {x.strip() for x in raw.split(",") if x.strip()}
 
-TDIR = Path(__file__).resolve().parent.parent / "transcripts"
+
+# Which records the recorded LLM abstains on / hallucinates once on. Overridable per
+# seed so the same generator records transcripts for ANY domain (see `make demo-alt`).
+ABSTAIN_IDS = _idset("GEN_ABSTAIN_IDS", "REC-015")
+HALLUCINATE_ONCE_IDS = _idset("GEN_HALLUCINATE_IDS", "REC-020")
+
+TDIR = Path(os.environ.get("TRANSCRIPTS_DIR",
+            str(Path(__file__).resolve().parent.parent / "transcripts")))
 
 
 def draft_from(rec, resp) -> WorkerDraft:
@@ -134,10 +144,18 @@ def main():
 
         if rec.id in HALLUCINATE_ONCE_IDS:
             m1 = router.decide(rec, escalate=False).model
+            hall = hallucinated_response(rec)
             write_transcript("CodingWorker", m1, build_worker_request(rec, 1, m1),
-                             hallucinated_response(rec), False)
+                             hall, False)
+            # Recompute the exact feedback the Orchestrator will hand back: run the
+            # real Verifier on the hallucinated draft and mirror its disagreements.
+            verdict = Verifier(bus, audit).verify(rec, draft_from(rec, hall))
+            feedback = [{"field": d["field"], "you_said": d.get("worker"),
+                         "source_truth": d.get("source"),
+                         "fix": "replace with the source-grounded value"}
+                        for d in verdict.disagreements]
             m2 = router.decide(rec, escalate=True).model
-            write_transcript("CodingWorker", m2, build_worker_request(rec, 2, m2),
+            write_transcript("CodingWorker", m2, build_worker_request(rec, 2, m2, feedback),
                              grounded_response(rec), True)
             written += 2
             continue

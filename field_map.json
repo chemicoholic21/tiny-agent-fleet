@@ -11,8 +11,9 @@
     "value": "amount",
     "charge": "amount",
     "charge_amount": "amount",
-    "total": "amount"
+    "total": "amount",
+    "invoice_total": "amount"
   },
-  "drift_aliases": ["value", "charge", "charge_amount", "total"],
+  "drift_aliases": ["value", "charge", "charge_amount", "total", "invoice_total"],
   "canonical_amount_field": "amount"
 }

@@ -1,0 +1,11 @@
+{
+  "name": "Logistics — Freight Invoice Auditing",
+  "primary_field_label": "invoice amount",
+  "categories": ["FREIGHT", "STORAGE", "CUSTOMS", "LASTMILE"],
+  "codebook": {
+    "FREIGHT":  {"cpt": ["FRT-100", "FRT-200"], "icd10": ["GL-5010", "GL-5011"]},
+    "STORAGE":  {"cpt": ["STG-300", "STG-310"], "icd10": ["GL-5200", "GL-5201"]},
+    "CUSTOMS":  {"cpt": ["CUS-400", "CUS-410"], "icd10": ["GL-5300", "GL-5301"]},
+    "LASTMILE": {"cpt": ["LMD-500", "LMD-510"], "icd10": ["GL-5400", "GL-5401"]}
+  }
+}

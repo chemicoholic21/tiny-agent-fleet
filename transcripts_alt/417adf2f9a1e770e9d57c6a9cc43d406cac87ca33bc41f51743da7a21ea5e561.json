@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-03",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-03",
+      "owner": "logi.cai",
+      "deadline": "2026-07-18",
+      "category": "CUSTOMS",
+      "amount": 1400.0,
+      "notes": "Customs brokerage, cleared."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "CUS-400"
+    ],
+    "icd10_codes": [
+      "GL-5300"
+    ],
+    "normalized_amount": 1400.0,
+    "category": "CUSTOMS",
+    "claim_summary": "CUSTOMS encounter ALT-03 for logi.cai; charge 1400.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:417adf2f9a1e770e9d57c6a9cc43d406cac87ca33bc41f51743da7a21ea5e561",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:e32ab09f118a2a1f017a0cb81f1c9e5de3e20b92d9ecbb8f7559dd93369c493a"
+}

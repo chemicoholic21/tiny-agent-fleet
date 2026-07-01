@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-04",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-04",
+      "owner": "logi.dot",
+      "deadline": "2026-07-28",
+      "category": "LASTMILE",
+      "amount": 800.0,
+      "notes": "Final-mile delivery, complete."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "LMD-500"
+    ],
+    "icd10_codes": [
+      "GL-5400"
+    ],
+    "normalized_amount": 800.0,
+    "category": "LASTMILE",
+    "claim_summary": "LASTMILE encounter ALT-04 for logi.dot; charge 800.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:bb1248f4a8521dd029e8a8bf2a6963bdb31d530bd07b112807d69279a0fae57d",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:19ca7459ce9e246770315e936348aba1edd6991c1424ba2ba1c30215785c749a"
+}

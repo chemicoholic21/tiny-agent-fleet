@@ -15,7 +15,15 @@
       "category": "REPORT",
       "amount": 5250.0,
       "notes": "Monthly figures."
-    }
+    },
+    "prior_feedback": [
+      {
+        "field": "normalized_amount",
+        "you_said": 15249.0,
+        "source_truth": 5250.0,
+        "fix": "replace with the source-grounded value"
+      }
+    ]
   },
   "response": {
     "cpt_codes": [

@@ -59,3 +59,4 @@ htmlcov/
 
 # Runtime outputs (written by `make demo`, never committed)
 out/
+out_alt/

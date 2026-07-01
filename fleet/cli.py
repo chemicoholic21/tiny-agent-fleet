@@ -22,8 +22,9 @@ from .state_machine import ApprovalState
 
 # ------------------------------------------------------------------ demo ------
 def cmd_demo(cfg: Config) -> int:
+    from .domain import domain_name
     print(f"AMENDMENT: role={cfg.amendment.role} threshold={int(cfg.amendment.threshold)}")
-    print(f"[fleet] industry=Healthcare Administration (RCM)  case_id={cfg.case_id}  "
+    print(f"[fleet] domain={domain_name()}  case_id={cfg.case_id}  "
           f"replay={cfg.replay_llm}  seed={cfg.seed_dir}")
     fleet = Fleet(cfg)
     summary = fleet.run()
@@ -37,7 +38,8 @@ def cmd_demo(cfg: Config) -> int:
         print("[exceptions]")
         for it in ex:
             print(f"   {it['id']:>10}  {it['reason_code']:<20} class={it['reason_class']}  {it.get('detail')}")
-    print(f"[out] out/rcm_claim_batch.json  out/audit.json  out/exception_queue.json")
+    o = cfg.out_dir
+    print(f"[out] {o}/rcm_claim_batch.json  {o}/audit.json  {o}/exception_queue.json")
     return 0
 
 
@@ -284,6 +286,89 @@ def cmd_probe_crash(cfg: Config) -> int:
     return 1
 
 
+def cmd_review(cfg: Config, args: list) -> int:
+    """Operator surface: review <id> <action> <actor> [field] [value] [reason...]
+
+    action ∈ {approve, reject, request-changes, edit-resolve}
+    e.g.  review REC-012 edit-resolve dr.reyes amount 5200
+          review REC-012 approve billing.mgr
+    """
+    from .review import review, ReviewError
+    if len(args) < 3:
+        print("usage: review <id> <action> <actor> [field value] [reason...]")
+        return 2
+    record_id, action, actor = args[0], args[1], args[2]
+    field = value = reason = None
+    rest = args[3:]
+    if action == "edit-resolve":
+        if len(rest) < 2:
+            print("edit-resolve needs: <field> <value> [reason...]")
+            return 2
+        field, value = rest[0], rest[1]
+        reason = " ".join(rest[2:]) or None
+    else:
+        reason = " ".join(rest) or None
+    try:
+        res = review(cfg, record_id, action, actor, field, value, reason)
+    except ReviewError as e:
+        print(f"REFUSED: {e}")
+        return 1
+    print(f"OK [{res['outcome']}] {record_id} by {actor}")
+    for k, v in res.items():
+        if k not in ("outcome", "record_id", "actor"):
+            print(f"   {k}: {v}")
+    print(f"   journaled -> {cfg.out_dir}/review_journal.json (append-only, hash-chained)")
+    return 0
+
+
+def cmd_verify_replay(cfg: Config) -> int:
+    """Prove replay REPRODUCES delivered outputs byte-for-byte from transcripts alone.
+
+    For every delivered record we independently reconstruct its delivered_fields from
+    (seed record + committed worker transcript response) — WITHOUT trusting the audit's
+    stored value — and confirm it matches both the audit and a second full run.
+    """
+    from .intake import intake
+    from .normalize import normalize
+    from .agents.worker import CodingWorker
+    from .delivered import build_delivered_fields
+    from .util import sha, hexof
+
+    Fleet(cfg).run()
+    audit1 = json.loads((cfg.out_dir / "audit.json").read_text(encoding="utf-8"))
+    pkg1 = (cfg.out_dir / "rcm_claim_batch.json").read_text(encoding="utf-8")
+    Fleet(cfg).run()
+    audit2 = json.loads((cfg.out_dir / "audit.json").read_text(encoding="utf-8"))
+    pkg2 = (cfg.out_dir / "rcm_claim_batch.json").read_text(encoding="utf-8")
+
+    if pkg1 != pkg2:
+        print("FAIL verify-replay: two runs produced different packages")
+        return 1
+
+    recs = {r.id: r for r in normalize(intake(cfg.seed_dir)).records}
+    dummy = CodingWorker(EventBus(), AuditLog(cfg.pipeline_now), LLMClient(cfg))
+    checked = 0
+    for r in audit1["records"]:
+        if r["status"] != "delivered":
+            continue
+        rec = recs[r["id"]]
+        tf = cfg.transcripts_dir / f"{hexof(r['transcript_hash'])}.json"
+        if not tf.exists():
+            print(f"FAIL verify-replay: {r['id']} transcript {r['transcript_hash']} missing")
+            return 1
+        t = json.loads(tf.read_text(encoding="utf-8"))
+        # Reconstruct delivered_fields ONLY from seed record + transcript response.
+        draft = dummy._parse(rec, t["response"])
+        recon = build_delivered_fields(rec, draft)
+        if sha(recon) != r["delivered_fields_hash"] or recon != r["delivered_fields"]:
+            print(f"FAIL verify-replay: {r['id']} reconstruction != audit")
+            return 1
+        checked += 1
+    print(f"PASS verify-replay: {checked} delivered records reproduced byte-for-byte "
+          f"from committed transcripts alone; two runs byte-identical")
+    return 0
+
+
 def main(argv=None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
     if not argv:
@@ -300,6 +385,10 @@ def main(argv=None) -> int:
     if cmd == "eval":
         from .eval_harness import run_eval
         return run_eval(cfg)
+    if cmd == "review":
+        return cmd_review(cfg, argv[1:])
+    if cmd == "verify-replay":
+        return cmd_verify_replay(cfg)
     if cmd == "probe-approval":
         return cmd_probe_approval(cfg)
     if cmd == "probe-agent-failure":

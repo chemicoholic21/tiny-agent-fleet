@@ -100,6 +100,7 @@ class Orchestrator(Agent):
         escalate = False
         attempt = 0
         last_verdict = None
+        feedback = None  # Verifier disagreements carried into the next Worker attempt
         while attempt < MAX_RETRIES + 1:
             attempt += 1
             decision = self.router.decide(rec, escalate=escalate)
@@ -118,9 +119,12 @@ class Orchestrator(Agent):
                         f"projected spend {spent + decision.est_cost_usd:.6f} > ceiling "
                         f"{self.cfg.max_cost_usd_per_record}", "routed")
 
-            # Worker draft (bounded structural repair -> abstain).
+            # Worker draft, given any feedback from the Verifier's prior rejection.
+            if feedback:
+                self.log("feedback_to_worker", record_id=rec.id, attempt=attempt,
+                         feedback=feedback)
             try:
-                draft, llm = self.worker.draft(rec, attempt, decision.model)
+                draft, llm = self.worker.draft(rec, attempt, decision.model, feedback)
             except MalformedDraft as e:
                 steps += 1
                 res.agent_trace.append(_span(self.worker.spec.name, decision.model,
@@ -128,6 +132,9 @@ class Orchestrator(Agent):
                     verdict=None, detail=f"malformed: {e}"))
                 if attempt <= MAX_RETRIES:
                     escalate = True
+                    feedback = [{"field": "structure",
+                                 "issue": f"unparseable output: {e}",
+                                 "fix": "return a single valid JSON object with all required keys"}]
                     continue
                 return self._route_exception(rec, res, "AGENT_MALFORMED", "A",
                     f"worker malformed after {attempt} attempts", "abstained")
@@ -143,7 +150,8 @@ class Orchestrator(Agent):
                 llm.prompt_version, status=worker_status, retries=attempt - 1,
                 tokens_in=llm.tokens_in, tokens_out=llm.tokens_out, cost_usd=llm.cost_usd,
                 latency_ms=llm.latency_ms, transcript_hash=llm.transcript_hash,
-                detail=f"confidence={draft.confidence}"))
+                detail=(f"confidence={draft.confidence}"
+                        + ("; applied verifier feedback" if feedback else ""))))
             res.agent_trace.append(_span(self.verifier.spec.name, None,
                 self.verifier.spec.prompt_version, status=(
                     "ok" if verdict.verdict == "pass" else (
@@ -158,9 +166,14 @@ class Orchestrator(Agent):
                 return self._route_exception(rec, res, "LOW_CONFIDENCE", "A",
                     verdict.notes, "abstained", verdict="needs_human")
 
-            # fail -> hallucination / malformed: escalate + retry
+            # fail -> hallucination / malformed: hand the Verifier's disagreements
+            # back to the Worker as actionable feedback, escalate the model, retry.
             if attempt <= MAX_RETRIES:
                 escalate = True
+                feedback = [{"field": d["field"], "you_said": d.get("worker"),
+                             "source_truth": d.get("source"),
+                             "fix": "replace with the source-grounded value"}
+                            for d in verdict.disagreements]
                 continue
             return self._route_exception(rec, res, verdict.reason_code, "A",
                 f"verifier rejected worker after {attempt} attempts: {verdict.notes}",

@@ -40,6 +40,33 @@ Industry: Healthcare Administration (RCM). CASE_ID (placeholder): **CEDX-DEMO1**
 - Ceilings: `MAX_COST_USD_PER_RECORD=0.05`, `MAX_STEPS_PER_RECORD=8`. A record that
   would breach them raises `BUDGET_EXCEEDED` (downgrade-or-route) or `AGENT_LOOP`.
 
+## Agent collaboration (iterative, not one-shot)
+When the Verifier overrules the Worker, the Orchestrator feeds the Verifier's
+`disagreements` back into the Worker's next prompt as structured `prior_feedback` and
+escalates the model. The retry is real collaboration, evidenced by `feedback_to_worker`
+events, the `applied verifier feedback` worker span, and the `prior_feedback` embedded
+in the retry transcript's request. Bounded at `MAX_RETRIES=2`, then routed to a human.
+
+## Human-in-the-loop (why the Operator is a first-class surface)
+`make review` exposes the four required actions (approve / reject / request-changes /
+edit-resolve). Each appends to an append-only, hash-chained review journal with
+actor + timestamp + before/after. **Maker ≠ checker** is enforced (an actor who edited a
+record cannot also approve it). `edit-resolve` is deliberately **deterministic** (no LLM)
+— a human supplying the corrected value *is* the judgement, and the Verifier re-grounds
+it — which is why a Class-A exception may only reach delivery after a recorded human act.
+
+## Generalization is structural (domain plug-in)
+Vertical knowledge (codebook + categories) is externalized to `domain_config.json`;
+`make demo-alt` runs the **same fleet** on freight-invoice auditing and passes the same
+gate. Nothing in the pipeline/agents/rules is RCM-worded, so the held-out seed — and an
+entirely different industry — exercise the identical code paths.
+
+## Reproducibility proof
+`make verify-replay` reconstructs every delivered record's fields **only** from the seed
+record + committed worker transcript (not trusting the audit's stored value) and confirms
+a byte-for-byte match, plus two runs identical. Replay is provably load-bearing, not a
+convenience.
+
 ## How provenance survives a re-run
 - Append-only, **hash-chained** audit (`chain_hash` per event). Timestamps derive
   from `PIPELINE_NOW + seq`, never the wall clock. The pipeline is deterministic and

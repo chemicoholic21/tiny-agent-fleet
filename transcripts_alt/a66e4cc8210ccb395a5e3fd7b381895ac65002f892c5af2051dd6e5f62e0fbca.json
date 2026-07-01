@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "ALT-01",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "ALT-01",
+      "owner": "logi.ana",
+      "deadline": "2026-07-15",
+      "category": "FREIGHT",
+      "amount": 1200.0,
+      "notes": "Standard FTL lane, POD attached."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "FRT-100"
+    ],
+    "icd10_codes": [
+      "GL-5010"
+    ],
+    "normalized_amount": 1200.0,
+    "category": "FREIGHT",
+    "claim_summary": "FREIGHT encounter ALT-01 for logi.ana; charge 1200.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:a66e4cc8210ccb395a5e3fd7b381895ac65002f892c5af2051dd6e5f62e0fbca",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:0231dc55ad7c1719c1c2f9f7c8a69296520aaa65add17c0bfdf6d2364dc943fa"
+}
