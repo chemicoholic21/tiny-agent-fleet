@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CEDX RCM canonical encounter record",
+  "schema_version": "1.0.0",
+  "description": "Versioned output-schema artifact for normalization. Downstream agents consume ONLY this shape.",
+  "type": "object",
+  "required": ["id", "version", "owner", "deadline", "category", "amount", "notes"],
+  "properties": {
+    "id":       { "type": "string", "pattern": "^REC-[0-9]+$" },
+    "version":  { "type": "integer", "minimum": 1 },
+    "owner":    { "type": ["string", "null"] },
+    "deadline": { "type": ["string", "null"], "description": "ISO date; timely-filing deadline" },
+    "category": { "type": ["string", "null"], "enum": ["ONBOARDING", "RENEWAL", "REVIEW", "REPORT", "INTAKE", null] },
+    "amount":   { "type": ["number", "null"], "description": "Normalized primary numeric field (claim charge)" },
+    "notes":    { "type": "string" }
+  }
+}

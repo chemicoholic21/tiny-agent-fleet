@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-003",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-003",
+      "owner": "c.nguyen",
+      "deadline": "2026-07-10",
+      "category": "REVIEW",
+      "amount": 3900.0,
+      "notes": "Quarterly review pack."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99213"
+    ],
+    "icd10_codes": [
+      "Z09"
+    ],
+    "normalized_amount": 3900.0,
+    "category": "REVIEW",
+    "claim_summary": "REVIEW encounter REC-003 for c.nguyen; charge 3900.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:03e5a03135a55463b47b751ec35a0ecd356c73e71eac135bf59331bc1791bb73",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:3ab97a7d885df76db9b7fef1ebb460e7d7f0210e0ba9e42bd582e92ced6fe226"
+}

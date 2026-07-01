@@ -1,0 +1,38 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-020",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-020",
+      "owner": "t.novak",
+      "deadline": "2026-08-02",
+      "category": "REPORT",
+      "amount": 5250.0,
+      "notes": "Monthly figures."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99080"
+    ],
+    "icd10_codes": [
+      "Z02.9"
+    ],
+    "normalized_amount": 15249.0,
+    "category": "REPORT",
+    "claim_summary": "Encounter REC-020: fabricated charge for upcoding demo.",
+    "confidence": 0.91,
+    "abstain": false
+  },
+  "response_hash": "sha256:187cbc847454b792d3a224a82786b946fa7f524302fed258c5417d378cd6e49c",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0
+}

@@ -1,0 +1,18 @@
+{
+  "description": "Declarative source-field -> canonical-field mapping. Aliases other than the canonical name are logged as SCHEMA_DRIFT (Class-B) and mapped, never dropped.",
+  "canonical_of": {
+    "id": "id",
+    "owner": "owner",
+    "deadline": "deadline",
+    "category": "category",
+    "notes": "notes",
+    "version": "version",
+    "amount": "amount",
+    "value": "amount",
+    "charge": "amount",
+    "charge_amount": "amount",
+    "total": "amount"
+  },
+  "drift_aliases": ["value", "charge", "charge_amount", "total"],
+  "canonical_amount_field": "amount"
+}

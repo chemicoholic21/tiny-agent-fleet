@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-019",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-019",
+      "owner": "s.haque",
+      "deadline": "2026-07-27",
+      "category": "ONBOARDING",
+      "amount": 4850.0,
+      "notes": "Onboarding pack complete."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99201"
+    ],
+    "icd10_codes": [
+      "Z00.00"
+    ],
+    "normalized_amount": 4850.0,
+    "category": "ONBOARDING",
+    "claim_summary": "ONBOARDING encounter REC-019 for s.haque; charge 4850.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:58bce96ae58597fc442a57fbba16451ae1ea6ee6287613813590a001300ec03e",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:3e4ab8bf932665c1a624ad9e5ff91a5b45ec73972bbfd33b3c0034138bb7d697"
+}

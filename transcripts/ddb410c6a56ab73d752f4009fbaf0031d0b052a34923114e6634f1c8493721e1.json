@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-008",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-008",
+      "owner": "h.iqbal",
+      "deadline": "2026-08-05",
+      "category": "REPORT",
+      "amount": 5000.0,
+      "notes": "Routine report."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99080"
+    ],
+    "icd10_codes": [
+      "Z02.9"
+    ],
+    "normalized_amount": 5000.0,
+    "category": "REPORT",
+    "claim_summary": "REPORT encounter REC-008 for h.iqbal; charge 5000.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:ddb410c6a56ab73d752f4009fbaf0031d0b052a34923114e6634f1c8493721e1",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:8c95f9958ec7c84f61f5948232da7a033fc55242dd006cef803144e9b2e11222"
+}

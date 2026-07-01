@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-016",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-016",
+      "owner": "p.larsen",
+      "deadline": "2026-07-23",
+      "category": "RENEWAL",
+      "amount": 4750.0,
+      "notes": "Renewal via partner feed."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99211"
+    ],
+    "icd10_codes": [
+      "Z76.89"
+    ],
+    "normalized_amount": 4750.0,
+    "category": "RENEWAL",
+    "claim_summary": "RENEWAL encounter REC-016 for p.larsen; charge 4750.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:6817190c4de02da97f4759724136f737eb050254221f4b70916d1e62fe9eba76",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:9b4175b9ad66d438e3854bff9fcbb6fe8eb6f234f03fa0037c633957be502249"
+}

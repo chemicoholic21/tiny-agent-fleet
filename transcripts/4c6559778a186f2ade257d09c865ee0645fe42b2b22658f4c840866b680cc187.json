@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-009",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-009",
+      "owner": "i.rossi",
+      "deadline": "2026-07-30",
+      "category": "ONBOARDING",
+      "amount": 4600.0,
+      "notes": "Onboarding, signed pack attached."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99201"
+    ],
+    "icd10_codes": [
+      "Z00.00"
+    ],
+    "normalized_amount": 4600.0,
+    "category": "ONBOARDING",
+    "claim_summary": "ONBOARDING encounter REC-009 for i.rossi; charge 4600.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:4c6559778a186f2ade257d09c865ee0645fe42b2b22658f4c840866b680cc187",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:adbc7b2dac94a6184fd30df052b89517303186c9743efe644f22dcd3b3465702"
+}
