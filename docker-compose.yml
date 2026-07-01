@@ -1,0 +1,13 @@
+services:
+  tinycedx:
+    build: .
+    platform: linux/amd64
+    environment:
+      REPLAY_LLM: "true"
+      SEED_DIR: "/app/seed"
+      CASE_ID: "${CASE_ID:-CEDX-XXXX}"      # set to YOUR live-assigned CASE_ID
+      PIPELINE_NOW: "2026-06-26"
+      # For the held-out real-LLM run, graders set:
+      #   REPLAY_LLM=false, LLM_API_KEY=..., LLM_MODEL=gpt-4o-mini|claude-3-5-haiku|gemini-1.5-flash
+    volumes:
+      - ./out:/app/out

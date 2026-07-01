@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cedxsystems.com/hiring/audit.schema.json",
+  "title": "CEDX Tiny-CEDX Agent-Fleet audit bundle (v2)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "case_id",
+    "pipeline_version",
+    "generated_at",
+    "seed_dir",
+    "amendment",
+    "agents",
+    "cost",
+    "output_package_hash",
+    "records",
+    "events"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^CEDX-[A-Z0-9]{4,}$",
+      "description": "Your live-assigned case id, e.g. CEDX-7F3A"
+    },
+    "pipeline_version": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "seed_dir": { "type": "string", "minLength": 1 },
+    "pipeline_now": { "type": "string" },
+    "amendment": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["role", "threshold"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": ["risk_officer", "legal_counsel", "compliance", "finance_controller"]
+        },
+        "threshold": { "type": "number" }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "minItems": 3,
+      "description": "Roster of the agent fleet. >=3 distinct agents required; an Orchestrator/Planner, >=1 Worker, and an independent Verifier.",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["name", "role", "models", "can_call"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "role": {
+            "type": "string",
+            "enum": ["orchestrator", "worker", "verifier", "router", "operator", "other"]
+          },
+          "models": { "type": "array", "items": { "type": "string" } },
+          "prompt_version": { "type": "string" },
+          "can_call": {
+            "type": "array",
+            "description": "Names of agents this agent is permitted to call (typed contract).",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "cost": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["total_usd", "records"],
+      "properties": {
+        "total_usd": { "type": "number" },
+        "avg_usd_per_record": { "type": "number" },
+        "p95_latency_ms": { "type": "number" },
+        "records": { "type": "integer" },
+        "projected_usd_per_10k": { "type": "number" }
+      }
+    },
+    "output_package_hash": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["id", "source_format", "status", "approval_trail", "agent_trace"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "version": { "type": "integer" },
+          "source_format": { "type": "string", "enum": ["feed", "eml", "pdf"] },
+          "source_version_hash": { "type": "string" },
+          "status": { "type": "string", "enum": ["delivered", "exception", "superseded"] },
+          "reason_code": {
+            "type": ["string", "null"],
+            "enum": [
+              "STALE", "MISSING_INPUT", "OUTLIER", "INJECTION_BLOCKED",
+              "LOW_CONFIDENCE", "UNVERIFIED_ANOMALY",
+              "AGENT_HALLUCINATION", "AGENT_LOOP", "AGENT_MALFORMED", "BUDGET_EXCEEDED",
+              "SCHEMA_DRIFT", "SUPERSEDED_VERSION", null
+            ]
+          },
+          "reason_class": { "type": ["string", "null"], "enum": ["A", "B", null] },
+          "transcript_hash": { "type": ["string", "null"] },
+          "delivered_fields": { "type": ["object", "null"] },
+          "delivered_fields_hash": { "type": ["string", "null"] },
+          "agent_trace": {
+            "type": "array",
+            "description": "Ordered span per agent step taken on this record. The observability backbone.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["agent", "status"],
+              "properties": {
+                "agent": { "type": "string", "minLength": 1 },
+                "model": { "type": ["string", "null"] },
+                "prompt_version": { "type": ["string", "null"] },
+                "tokens_in": { "type": ["integer", "null"] },
+                "tokens_out": { "type": ["integer", "null"] },
+                "cost_usd": { "type": ["number", "null"] },
+                "latency_ms": { "type": ["number", "null"] },
+                "retries": { "type": ["integer", "null"] },
+                "transcript_hash": { "type": ["string", "null"] },
+                "status": {
+                  "type": "string",
+                  "enum": ["ok", "retried", "rejected", "overruled", "routed", "abstained", "killed"]
+                },
+                "verdict": {
+                  "type": ["string", "null"],
+                  "description": "For verifier spans: pass | fail | needs_human"
+                }
+              }
+            }
+          },
+          "approval_trail": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["state", "actor", "ts"],
+              "properties": {
+                "state": {
+                  "type": "string",
+                  "enum": ["draft", "in_review", "changes_requested", "approved", "delivered", "blocked"]
+                },
+                "actor": { "type": "string", "minLength": 1 },
+                "ts": { "type": "string", "minLength": 1 },
+                "reason": { "type": ["string", "null"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "description": "Append-only event log",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["seq", "ts", "actor", "action"],
+        "properties": {
+          "seq": { "type": "integer" },
+          "ts": { "type": "string" },
+          "actor": { "type": "string" },
+          "action": { "type": "string" },
+          "record_id": { "type": ["string", "null"] }
+        }
+      }
+    }
+  }
+}

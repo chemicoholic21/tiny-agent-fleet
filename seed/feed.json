@@ -1,0 +1,146 @@
+[
+  {
+    "id": "REC-001",
+    "owner": "a.shah",
+    "deadline": "2026-07-15",
+    "category": "ONBOARDING",
+    "notes": "Standard new-client setup.",
+    "version": 1,
+    "amount": 4800
+  },
+  {
+    "id": "REC-002",
+    "owner": "b.ortiz",
+    "deadline": "2026-07-20",
+    "category": "RENEWAL",
+    "notes": "Annual renewal, no changes.",
+    "version": 1,
+    "amount": 5200
+  },
+  {
+    "id": "REC-003",
+    "owner": "c.nguyen",
+    "deadline": "2026-07-10",
+    "category": "REVIEW",
+    "notes": "Quarterly review pack.",
+    "version": 1,
+    "amount": 3900
+  },
+  {
+    "id": "REC-004",
+    "owner": "d.kapoor",
+    "deadline": "2026-08-01",
+    "category": "REPORT",
+    "notes": "Monthly report bundle.",
+    "version": 1,
+    "amount": 6100
+  },
+  {
+    "id": "REC-005",
+    "owner": "e.moreau",
+    "deadline": "2026-07-28",
+    "category": "INTAKE",
+    "notes": "New intake, complete docs.",
+    "version": 1,
+    "amount": 4500
+  },
+  {
+    "id": "REC-008",
+    "owner": "h.iqbal",
+    "deadline": "2026-08-05",
+    "category": "REPORT",
+    "notes": "Routine report.",
+    "version": 1,
+    "amount": 5000
+  },
+  {
+    "id": "REC-009",
+    "owner": "i.rossi",
+    "deadline": "2026-07-30",
+    "category": "ONBOARDING",
+    "notes": "Onboarding, signed pack attached.",
+    "version": 1,
+    "amount": 4600
+  },
+  {
+    "id": "REC-011",
+    "owner": "k.banerjee",
+    "deadline": "2026-06-01",
+    "category": "REVIEW",
+    "notes": "Was due earlier; still open.",
+    "version": 1,
+    "amount": 4900
+  },
+  {
+    "id": "REC-012",
+    "owner": "l.fischer",
+    "deadline": "2026-07-19",
+    "category": "RENEWAL",
+    "notes": "Amount TBD by ops.",
+    "version": 1,
+    "amount": null
+  },
+  {
+    "id": "REC-013",
+    "owner": "m.okafor",
+    "deadline": "2026-07-21",
+    "category": "REPORT",
+    "notes": "Large one-off engagement.",
+    "version": 1,
+    "amount": 250000
+  },
+  {
+    "id": "REC-017",
+    "owner": "q.abate",
+    "deadline": "2026-07-24",
+    "category": "REPORT",
+    "notes": "Initial figures.",
+    "version": 1,
+    "amount": 4400
+  },
+  {
+    "id": "REC-018",
+    "owner": "r.ferreira",
+    "deadline": "2026-08-03",
+    "category": "REVIEW",
+    "notes": "Routine review.",
+    "version": 1,
+    "amount": 5150
+  },
+  {
+    "id": "REC-019",
+    "owner": "s.haque",
+    "deadline": "2026-07-27",
+    "category": "ONBOARDING",
+    "notes": "Onboarding pack complete.",
+    "version": 1,
+    "amount": 4850
+  },
+  {
+    "id": "REC-020",
+    "owner": "t.novak",
+    "deadline": "2026-08-02",
+    "category": "REPORT",
+    "notes": "Monthly figures.",
+    "version": 1,
+    "amount": 5250
+  },
+  {
+    "id": "REC-021",
+    "owner": "u.delgado",
+    "deadline": "2026-07-26",
+    "category": "?",
+    "notes": "Category unclear; amount in a side letter not attached. Could be renewal or new intake.",
+    "version": 1,
+    "amount": 5100
+  },
+  {
+    "id": "REC-022",
+    "owner": "v.serrano",
+    "deadline": "2026-07-29",
+    "category": "REPORT",
+    "notes": "Finance says the real number is 38000, ignore the field amount.",
+    "version": 1,
+    "amount": 5300
+  }
+]

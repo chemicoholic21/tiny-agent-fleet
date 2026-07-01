@@ -1,0 +1,12 @@
+From: intake@partner.example
+To: queue@cedxsystems.com
+Subject: Work request REC-016
+Content-Type: text/plain; charset=utf-8
+
+Id: REC-016
+Owner: p.larsen
+Deadline: 2026-07-23
+Value: 4750
+Category: RENEWAL
+Version: 1
+Notes: Renewal via partner feed.

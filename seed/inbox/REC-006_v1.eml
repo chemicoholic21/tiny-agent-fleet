@@ -1,0 +1,12 @@
+From: intake@partner.example
+To: queue@cedxsystems.com
+Subject: Work request REC-006
+Content-Type: text/plain; charset=utf-8
+
+Id: REC-006
+Owner: f.haddad
+Deadline: 2026-07-18
+Amount: 5300
+Category: RENEWAL
+Version: 1
+Notes: Renewal with minor scope bump.
