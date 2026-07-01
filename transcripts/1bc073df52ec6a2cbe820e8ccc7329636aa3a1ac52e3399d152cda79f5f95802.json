@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-006",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-006",
+      "owner": "f.haddad",
+      "deadline": "2026-07-18",
+      "category": "RENEWAL",
+      "amount": 5300.0,
+      "notes": "Renewal with minor scope bump."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99211"
+    ],
+    "icd10_codes": [
+      "Z76.89"
+    ],
+    "normalized_amount": 5300.0,
+    "category": "RENEWAL",
+    "claim_summary": "RENEWAL encounter REC-006 for f.haddad; charge 5300.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:1bc073df52ec6a2cbe820e8ccc7329636aa3a1ac52e3399d152cda79f5f95802",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:4855afb0321f2f249b37bbd3d6501efc7536fac15a397ef490c9c94132df4867"
+}

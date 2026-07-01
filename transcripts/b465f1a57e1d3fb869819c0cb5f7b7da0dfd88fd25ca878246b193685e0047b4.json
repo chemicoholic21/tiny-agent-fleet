@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-001",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-001",
+      "owner": "a.shah",
+      "deadline": "2026-07-15",
+      "category": "ONBOARDING",
+      "amount": 4800.0,
+      "notes": "Standard new-client setup."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99201"
+    ],
+    "icd10_codes": [
+      "Z00.00"
+    ],
+    "normalized_amount": 4800.0,
+    "category": "ONBOARDING",
+    "claim_summary": "ONBOARDING encounter REC-001 for a.shah; charge 4800.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:b465f1a57e1d3fb869819c0cb5f7b7da0dfd88fd25ca878246b193685e0047b4",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:ed9cc2ab1856ec925aa15d94f88499d85337419fad5df6d413613f6a454e4ef8"
+}

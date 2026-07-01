@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-002",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-002",
+      "owner": "b.ortiz",
+      "deadline": "2026-07-20",
+      "category": "RENEWAL",
+      "amount": 5200.0,
+      "notes": "Annual renewal, no changes."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99211"
+    ],
+    "icd10_codes": [
+      "Z76.89"
+    ],
+    "normalized_amount": 5200.0,
+    "category": "RENEWAL",
+    "claim_summary": "RENEWAL encounter REC-002 for b.ortiz; charge 5200.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:28216719e4f759bc416e4c60436d7afea20a3eca66b471d166bc8989cf6c56f6",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:b2d3acc8ec4dea5dd257c7f32e7cc0a018238a0e27a7523d8e7afb793fbb0947"
+}

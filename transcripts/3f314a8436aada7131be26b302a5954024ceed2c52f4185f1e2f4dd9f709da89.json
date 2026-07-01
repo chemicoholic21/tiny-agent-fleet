@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-005",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-005",
+      "owner": "e.moreau",
+      "deadline": "2026-07-28",
+      "category": "INTAKE",
+      "amount": 4500.0,
+      "notes": "New intake, complete docs."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99204"
+    ],
+    "icd10_codes": [
+      "Z00.00"
+    ],
+    "normalized_amount": 4500.0,
+    "category": "INTAKE",
+    "claim_summary": "INTAKE encounter REC-005 for e.moreau; charge 4500.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:3f314a8436aada7131be26b302a5954024ceed2c52f4185f1e2f4dd9f709da89",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:36452e639507b05a52222358cc5aadf1c3407a10246443e16a0692442b329e40"
+}

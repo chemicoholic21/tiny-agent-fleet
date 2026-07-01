@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-004",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-004",
+      "owner": "d.kapoor",
+      "deadline": "2026-08-01",
+      "category": "REPORT",
+      "amount": 6100.0,
+      "notes": "Monthly report bundle."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99080"
+    ],
+    "icd10_codes": [
+      "Z02.9"
+    ],
+    "normalized_amount": 6100.0,
+    "category": "REPORT",
+    "claim_summary": "REPORT encounter REC-004 for d.kapoor; charge 6100.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:a055b8eb6a6712641a98ca76eb0967ce7d48bdb8a172047a56557c6fad2e207b",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:c8b03dfd1de5a25c6ebc4f4b554026bfe2b94fde988d06f48e7c6e24bfd70bab"
+}

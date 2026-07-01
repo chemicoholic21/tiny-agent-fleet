@@ -56,3 +56,6 @@ htmlcov/
 *.temp
 *.log
 *.bak
+
+# Runtime outputs (written by `make demo`, never committed)
+out/

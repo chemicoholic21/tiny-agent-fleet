@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-007",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-007",
+      "owner": "g.silva",
+      "deadline": "2026-07-22",
+      "category": "REVIEW",
+      "amount": 4700.0,
+      "notes": "Standard review, all inputs present."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99213"
+    ],
+    "icd10_codes": [
+      "Z09"
+    ],
+    "normalized_amount": 4700.0,
+    "category": "REVIEW",
+    "claim_summary": "REVIEW encounter REC-007 for g.silva; charge 4700.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:6361099cca5fc5d01a4830dd09baa6110d663ee7dba28a6d170cb746088e0de1",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:ef787384e4dba39d07ba3d79fdab4a410fe8fc188bc797a1c78553ad08b5cb9d"
+}

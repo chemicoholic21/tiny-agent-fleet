@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-018",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-018",
+      "owner": "r.ferreira",
+      "deadline": "2026-08-03",
+      "category": "REVIEW",
+      "amount": 5150.0,
+      "notes": "Routine review."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99213"
+    ],
+    "icd10_codes": [
+      "Z09"
+    ],
+    "normalized_amount": 5150.0,
+    "category": "REVIEW",
+    "claim_summary": "REVIEW encounter REC-018 for r.ferreira; charge 5150.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:aac0b94ecb2806c6205a6c410fe81432d582d70680120cb33dc7fde7b28e8811",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:a8851a8c4ee7b6de89f0734fb17cc125786ea3e7a6e21fc6f5c75f33ac50b457"
+}

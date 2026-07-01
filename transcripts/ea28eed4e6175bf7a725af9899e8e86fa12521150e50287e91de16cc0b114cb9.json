@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o-mini",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-010",
+    "attempt": 1,
+    "model": "gpt-4o-mini",
+    "encounter": {
+      "id": "REC-010",
+      "owner": "j.cohen",
+      "deadline": "2026-07-25",
+      "category": "INTAKE",
+      "amount": 5100.0,
+      "notes": "Intake complete."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99204"
+    ],
+    "icd10_codes": [
+      "Z00.00"
+    ],
+    "normalized_amount": 5100.0,
+    "category": "INTAKE",
+    "claim_summary": "INTAKE encounter REC-010 for j.cohen; charge 5100.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:ea28eed4e6175bf7a725af9899e8e86fa12521150e50287e91de16cc0b114cb9",
+  "tokens_in": 410,
+  "tokens_out": 190,
+  "cost_usd": 0.0001755,
+  "latency_ms": 60.0,
+  "delivered_fields_hash": "sha256:a85846d1845f2e1a81567d3e7eafec8b6953ccfd2ae6409ef13f2f8c3d37a802"
+}

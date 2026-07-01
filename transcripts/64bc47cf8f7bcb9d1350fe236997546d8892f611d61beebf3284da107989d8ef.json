@@ -1,0 +1,39 @@
+{
+  "agent": "CodingWorker",
+  "model": "gpt-4o",
+  "prompt_version": "coder-v3",
+  "request": {
+    "agent": "CodingWorker",
+    "prompt_version": "coder-v3",
+    "record_id": "REC-020",
+    "attempt": 2,
+    "model": "gpt-4o",
+    "encounter": {
+      "id": "REC-020",
+      "owner": "t.novak",
+      "deadline": "2026-08-02",
+      "category": "REPORT",
+      "amount": 5250.0,
+      "notes": "Monthly figures."
+    }
+  },
+  "response": {
+    "cpt_codes": [
+      "99080"
+    ],
+    "icd10_codes": [
+      "Z02.9"
+    ],
+    "normalized_amount": 5250.0,
+    "category": "REPORT",
+    "claim_summary": "REPORT encounter REC-020 for t.novak; charge 5250.0. Codes justified by category.",
+    "confidence": 0.96,
+    "abstain": false
+  },
+  "response_hash": "sha256:64bc47cf8f7bcb9d1350fe236997546d8892f611d61beebf3284da107989d8ef",
+  "tokens_in": 480,
+  "tokens_out": 240,
+  "cost_usd": 0.0036,
+  "latency_ms": 120.0,
+  "delivered_fields_hash": "sha256:3548909f3ce4c83603517bc8d307ebce4b4c23b68ac4635a9f4ef37d3c84f2ca"
+}
