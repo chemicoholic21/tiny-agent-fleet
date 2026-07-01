@@ -39,7 +39,46 @@ a real agent.
 | Verifier | verifier | `agents/verifier.py` | WorkerDraft → VerifierVerdict | — | no (deterministic grounding) |
 | Operator | operator | `agents/operator.py` | WorkerDraft → ApprovalState | — | no |
 
-## 2. The 5 governed stages (underneath the fleet)
+## 2. Control flow — hub-and-spoke with a feedback loop (NOT a linear agent chain)
+
+Two different things are easy to conflate. The **stage pipeline** (§3) is linear on the
+happy path — `Intake → Normalize → Assembly → Review → Delivery`. The **agent control
+flow** is not: it is a mediator/hub-and-spoke topology with a cycle and branches.
+
+- **Hub-and-spoke, not a chain.** Agents never hand off to each other (no
+  `Worker → Verifier → Operator` bucket brigade). Every message goes *through* the
+  Orchestrator. This is encoded in the `can_call` allow-lists: only the Orchestrator
+  has a non-empty `can_call`; every spoke has `can_call: []`.
+
+- **A feedback loop.** Inside `Orchestrator.process()` the Worker↔Verifier step is a
+  loop, not a straight line — the Verifier can OVERRULE the Worker and send the record
+  back through the Router to re-draft on a stronger model (bounded by `MAX_RETRIES=2`):
+
+  ```
+      ┌──────────────────────────── retry (escalate=True) ───────────────────────────┐
+      ▼                                                                               │
+  Router.decide ─▶ budget gate ─▶ CodingWorker.draft ─▶ Verifier.verify ──────────────┤
+                                                             │  pass        → Operator → deliver
+                                                             │  needs_human → route LOW_CONFIDENCE
+                                                             └  fail        → escalate + loop ↑
+  ```
+  (`make trace ID=REC-020` shows exactly this: draft → Verifier `rejected` → escalate →
+  strong-model draft → Verifier `pass` → delivered.)
+
+- **Conditional routing, not one path.** The flow forks at several points: a Class-A
+  data finding short-circuits *before* assembly (Worker/Verifier never run); the
+  Verifier verdict fans out to deliver / retry / abstain / route; the budget gate forks
+  to downgrade-or-`BUDGET_EXCEEDED`; the delivery gate forks to `blocked` when approval
+  or the CASE_ID amendment is unmet.
+
+What it is **not**: a peer-to-peer agent swarm and not asynchronous — the Orchestrator
+drives one record synchronously. For a *governed* RCM process that is deliberate:
+determinism, a single budget/approval enforcement point, and reconstructable traces
+beat emergent multi-agent chatter (see `DECISIONS.md`). Natural non-linear extensions
+(a two-pass consensus Verifier for high-value claims, or a Redactor spoke before
+delivery) are localized changes thanks to the typed-contract + event-bus design.
+
+## 3. The 5 governed stages (underneath the fleet)
 
 1. **Intake** (`fleet/intake.py`) — parses BOTH `feed.json` and `inbox/*.{eml,pdf}`
    (pypdf for PDFs). Every raw record persists its `source_format` and a
@@ -61,7 +100,7 @@ a real agent.
    (`out/rcm_claim_batch.json`) + append-only **hash-chained** `out/audit.json`;
    CASE_ID present throughout.
 
-## 3. Where the Verifier overrules the Worker
+## 4. Where the Verifier overrules the Worker
 
 `Orchestrator.process()` calls `Verifier.verify(rec, draft)` after every Worker
 draft. The Verifier is **pure code** — it compares the emitted `normalized_amount`
@@ -79,7 +118,7 @@ is logged in the record's `agent_trace` (see `make trace ID=REC-020` — a Worke
 hallucinates the amount, the Verifier overrules it, and the strong-model retry
 recovers).
 
-## 4. Where budget / router decisions live
+## 5. Where budget / router decisions live
 
 - **Router** (`agents/router.py`): cheap `gpt-4o-mini` by default; escalates to
   `gpt-4o` only on hardness signals (long/ambiguous notes, missing category, or a
@@ -90,7 +129,7 @@ recovers).
   downgrade, else raises `BUDGET_EXCEEDED`. A runaway record trips `AGENT_LOOP` on
   the step cap. Nothing is ever silently overspent.
 
-## 5. Observability
+## 6. Observability
 
 Every record carries an ordered `agent_trace` (one span per agent step:
 agent, model, prompt_version, tokens, cost, latency, retries, status, verdict,
@@ -99,7 +138,7 @@ disagreements). The audit's top-level `agents` roster and `cost` summary
 `make trace ID=<id>` and `make replay ID=<id>` reconstruct a record's full
 decision path and data lineage **from the log alone**.
 
-## 6. Provenance & append-only
+## 7. Provenance & append-only
 
 `fleet/audit.py` is append-only (no update/delete API) and every event carries a
 `chain_hash = sha256(prev_hash | seq | ts | actor | action | record_id)`. Any
@@ -107,7 +146,7 @@ mutation or deletion of a past entry breaks the chain — `make probe-append-onl
 proves both are detected. Timestamps derive from `PIPELINE_NOW + seq` (never the
 wall clock), so a re-run is byte-identical (`make probe-idempotency`).
 
-## 7. LLM replay contract
+## 8. LLM replay contract
 
 `fleet/llm.py`: in `REPLAY_LLM=true` (default) only the model call is replaced — a
 committed transcript whose canonical **request** hash matches is returned; each
