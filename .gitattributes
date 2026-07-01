@@ -1,0 +1,10 @@
+# Normalize line endings so Windows (CRLF) and Linux/macOS (LF) checkouts don't
+# produce spurious "every line changed" merge conflicts. All text is stored LF.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png binary
+*.pdf binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
