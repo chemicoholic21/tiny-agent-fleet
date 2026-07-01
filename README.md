@@ -6,6 +6,12 @@ command, survives injected data- and agent-level failures, is fully traceable, a
 is cheap by design. The "agent" is an orchestrator of APIs, rules, an LLM, human
 approvals, retries and audit — not a chatbot.
 
+![Tiny CEDX Agent Fleet — end-to-end flow](workflow.png)
+
+*End-to-end flow: the 5 governed stages across the top, the Orchestrator / Worker /
+Verifier / Operator agents, the exception queue, and the cross-cutting router, audit
+hash-chain and replay. Details in [ARCHITECTURE.md](ARCHITECTURE.md).*
+
 ---
 
 ## 1. Industry & Scope
