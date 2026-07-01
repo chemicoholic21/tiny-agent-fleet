@@ -28,20 +28,47 @@ approvals, retries and audit — not a chatbot.
 
 Typed events/contracts: `fleet/events.py`. Roster is emitted to `out/audit.json → agents`.
 
+**Shape:** hub-and-spoke (mediator), **not** a linear agent chain. The Orchestrator is
+the only agent with a non-empty `can_call`; the spokes never call each other. Per record
+the control flow has a **feedback loop** (Worker → Verifier → *escalate & retry* → Worker)
+and **conditional routing** (deliver / abstain / retry / exception), so it is not a
+straight pipeline. See `ARCHITECTURE.md §2`. The 5 *stages* below are the linear happy path.
+
 ## 3. How to Run
+Requires Python 3.11 + `pip install -r requirements.txt` (jsonschema, pypdf). Outputs:
+`out/rcm_claim_batch.json`, `out/audit.json`, `out/exception_queue.json`.
+
+**Docker — one command (what the grader runs; linux/amd64, installs everything):**
 ```bash
-# One command (offline, deterministic replay). Docker equivalent below.
-CASE_ID=CEDX-DEMO1 make demo && make verify
-
-# Docker (single command, linux/amd64):
-CASE_ID=CEDX-DEMO1 docker compose up --build   # runs `make demo && make verify`
-
-# Real-LLM path (held-out generalization; free tiers fine):
-REPLAY_LLM=false LLM_API_KEY=sk-... LLM_MODEL=gpt-4o-mini make demo
+CASE_ID=CEDX-DEMO1 docker compose up --build     # runs `make demo && make verify`
 ```
-Requires Python 3.11 + `pip install -r requirements.txt` (jsonschema, pypdf) for the
-non-Docker path. Outputs: `out/rcm_claim_batch.json`, `out/audit.json`,
-`out/exception_queue.json`.
+
+**Linux / macOS (make):**
+```bash
+pip install -r requirements.txt
+CASE_ID=CEDX-DEMO1 make demo && make verify
+```
+
+**Windows PowerShell (no `make` needed — call the module directly):**
+```powershell
+pip install -r requirements.txt
+$env:CASE_ID="CEDX-DEMO1"; $env:SEED_DIR="seed"
+python -m fleet.cli demo
+python verify_audit.py --audit out/audit.json --transcripts transcripts --schema audit.schema.json
+```
+Every `make <target>` maps 1:1 to `python -m fleet.cli <target>` (with `ID=<id>` passed
+as a trailing arg), so on any platform without `make` you can run, e.g.:
+`python -m fleet.cli trace REC-020`, `python -m fleet.cli eval`,
+`python -m fleet.cli probe-agent-failure`, `python -m fleet.cli replay REC-016`, etc.
+(`verify` is the one exception: run the `verify_audit.py` line shown above.)
+
+**Real-LLM path (held-out generalization; free tiers fine):**
+```bash
+REPLAY_LLM=false LLM_API_KEY=sk-... LLM_MODEL=gpt-4o-mini make demo   # or python -m fleet.cli demo
+```
+> Note: if `verify` prints `WARN: jsonschema not installed; skipping schema validation`,
+> run `pip install -r requirements.txt` — the schema-conformance check (gate #1) only runs
+> when `jsonschema` is present. The Docker path installs it automatically.
 
 ## 4. Controls (probe CLI — all exit 0)
 | Command | Proves |
@@ -57,6 +84,9 @@ non-Docker path. Outputs: `out/rcm_claim_batch.json`, `out/audit.json`,
 | `make probe-append-only` | mutation AND deletion of a past audit entry refused |
 | `make probe-idempotency` | run twice → byte-identical, no duplicates |
 | `make probe-crash` (bonus) | re-run after a killed write re-converges |
+
+No `make`? Each row is `python -m fleet.cli <target>` (append `<id>` for trace/replay),
+except `verify` → the `verify_audit.py` command in §3.
 
 ## 5. Planted-problem handling
 **Data layer (Class-A, blocking — routed, never delivered):**
