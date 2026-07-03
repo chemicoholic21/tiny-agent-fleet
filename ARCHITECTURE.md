@@ -5,7 +5,7 @@ The "agent" here is not a chatbot; it is an **orchestrator** that coordinates AP
 enterprise data, an LLM, deterministic business rules, human approvals, retries,
 logging and an external delivery step into one governed, event-driven process.
 
-![Tiny CEDX Agent Fleet — end-to-end flow](workflow.png)
+
 
 *Overview: the 5 governed stages, the four agents, the exception queue and the
 cross-cutting router / append-only audit / replay. The ASCII topology below is the
