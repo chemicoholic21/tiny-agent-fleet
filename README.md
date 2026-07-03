@@ -25,7 +25,7 @@ hash-chain, and replay. Full detail in [ARCHITECTURE.md](ARCHITECTURE.md).*
 ## 1. Industry and Scope
 - **Industry:** Healthcare Administration, AI-orchestrated Revenue Cycle Management (RCM).
 - **Tier:** Mid-market hospital and physician-group RCM.
-- **CASE_ID:** `CEDX-DEMO1` (placeholder; pass your live id via `CASE_ID=`).
+- **CASE_ID:** `CEDX-06CCAC` (placeholder; pass your live id via `CASE_ID=`).
 - **Flow:** patient encounter and charge intake, then data normalization, then AI-assisted
   coding (charge capture, medical coding, CDI, medical necessity), then deterministic
   decision points, then claim assembly (837) and scrubbing, then human approvals, then
@@ -55,19 +55,19 @@ written to `out/rcm_claim_batch.json`, `out/audit.json`, and `out/exception_queu
 
 **Docker, one command (what the grader runs; linux/amd64, installs everything):**
 ```bash
-CASE_ID=CEDX-DEMO1 docker compose up --build     # runs `make demo && make verify`
+CASE_ID=CEDX-06CCAC docker compose up --build     # runs `make demo && make verify`
 ```
 
 **Linux and macOS (make):**
 ```bash
 pip install -r requirements.txt
-CASE_ID=CEDX-DEMO1 make demo && make verify
+CASE_ID=CEDX-06CCAC make demo && make verify
 ```
 
 **Windows PowerShell (no `make` needed; call the module directly):**
 ```powershell
 pip install -r requirements.txt
-$env:CASE_ID="CEDX-DEMO1"; $env:SEED_DIR="seed"
+$env:CASE_ID="CEDX-06CCAC"; $env:SEED_DIR="seed"
 python -m fleet.cli demo
 python verify_audit.py --audit out/audit.json --transcripts transcripts --schema audit.schema.json
 ```
